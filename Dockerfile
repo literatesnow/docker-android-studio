@@ -16,7 +16,7 @@ RUN echo "Java" \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
       ca-certificates curl apt-utils \
-    && curl --location --retry 3 \ # --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem \
+    && curl --location --retry 3 \
             --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
             --output "/tmp/cache/$JDK_FILE" \
             "http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION}+${JAVA_BUILD}/${JAVA_SIG}/jdk-${JAVA_VERSION}_linux-x64_bin.tar.gz" \
@@ -65,7 +65,7 @@ COPY ./pulse-client.conf /tmp/
 RUN echo "Download studio" \
   && if [ ! -f "/tmp/cache/$STUDIO_FILE" ]; then \
     echo "Downloading..." \
-    && curl --location --retry=3 --output="/tmp/cache/$STUDIO_FILE" \
+    && curl --location --retry 3 --output "/tmp/cache/$STUDIO_FILE" \
             "https://dl.google.com/dl/android/studio/ide-zips/${STUDIO_VERSION}/android-studio-ide-${STUDIO_BUILD}-linux.zip" \
   ; fi \
   && echo "KVM" \
