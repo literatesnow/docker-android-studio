@@ -78,13 +78,9 @@ RUN echo "Download studio" \
   && echo "Android Studio" \
   && sha256sum "/tmp/cache/$STUDIO_FILE" | grep "$STUDIO_HASH" \
   && unzip -qd "/home/droid/" "/tmp/cache/$STUDIO_FILE" \
-  && cat /home/droid/android-studio/bin/idea.properties | \
-        sed -e 's!# idea\.config\.path=.\+$!idea.config.path=/var/studio/.AndroidStudio3.1/config!' \
-            -e 's!# idea\.system\.path=.\+$!idea.system.path=/var/studio/.AndroidStudio3.1/system!' \
-            > /home/droid/.idea.properties \
-  && cp /home/droid/android-studio/bin/studio64.vmoptions /home/droid/.studio64.vmoptions \
-  && echo '-Djava.util.prefs.userRoot=/var/studio/' >> /home/droid/.studio64.vmoptions \
+  && echo "Saved state directories" \
   && ln -s /var/studio/.AndroidStudio3.1 /home/droid/.AndroidStudio3.1 \
+  && ln -s /var/studio/.java /home/droid/.java \
   && echo "Permissions" \
   && chown -R droid:droid /home/droid/ \
   && echo "Cleaning up" \
@@ -107,9 +103,7 @@ ENV DISPLAY=$DISPLAY \
     ANDROID_SDK_HOME=/var/studio \
     ANDROID_EMULATOR_HOME=/var/studio/.android \
     ANDROID_AVD_HOME=/var/studio/.android/avd \
-    ANDROID_EMULATOR_USE_SYSTEM_LIBS=1 \
-    STUDIO_PROPERTIES=/home/droid/.idea.properties \
-    STUDIO_VM_OPTIONS=/home/droid/.studio64.vmoptions
+    ANDROID_EMULATOR_USE_SYSTEM_LIBS=1
 
 ENV PATH=$PATH:/home/droid/android-studio/bin:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools
 

@@ -12,6 +12,10 @@ if [ -z "$STUDIO_DIR" ]; then
   exit 1
 fi
 
+# Ensure directories which are symlinked in the Dockerfile exist
+mkdir -p "$STUDIO_DIR/.AndroidStudio3.1"
+mkdir -p "$STUDIO_DIR/.java"
+
 # https://stackoverflow.com/questions/16296753/can-you-run-gui-apps-in-a-docker-container
 # By Jürgen Weigert
 XSOCK=/tmp/.X11-unix
