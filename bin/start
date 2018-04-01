@@ -1,0 +1,33 @@
+#!/bin/bash
+
+USER_UID=$(id -u)
+BASE_DIR=$(pwd)
+
+if [ -z "$DATA_DIR" ]; then
+  echo "Env DATA_DIR not set (this is where the android projects are stored)"
+  exit 1
+fi
+if [ -z "$STUDIO_DIR" ]; then
+  echo "Env STUDIO_DIR not set (this is where android studio components are stored)"
+  exit 1
+fi
+
+# https://stackoverflow.com/questions/16296753/can-you-run-gui-apps-in-a-docker-container
+# By Jürgen Weigert
+XSOCK=/tmp/.X11-unix
+XAUTH=/tmp/.docker-android-studio.xauth
+xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f "$XAUTH" nmerge -
+
+sudo docker run -ti \
+                --rm \
+                --device=/dev/kvm \
+                --device=/dev/dri \
+                --volume="/run/user/$USER_UID/pulse:/run/user/$USER_UID/pulse" \
+                --volume="$STUDIO_DIR:/var/studio" \
+                --volume="$DATA_DIR:/data" \
+                --volume="$XSOCK:$XSOCK" \
+                --volume="$XAUTH:$XAUTH" \
+                --env=XAUTHORITY="$XAUTH" \
+                --entrypoint /bin/bash \
+                -u droid \
+                android-studio

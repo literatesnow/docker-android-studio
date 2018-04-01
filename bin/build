@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+USER_UID=$(id -u)
+USER_GID=$(id -g)
+KVM_GID=$(getent group kvm | cut -d':' -f3)
+BASE_DIR=$(dirname "$0")/../
+
+sudo docker build -t android-studio \
+                  --build-arg DISPLAY="$DISPLAY" \
+                  --build-arg USER_UID="$USER_UID" \
+                  --build-arg USER_GID="$USER_GID" \
+                  --build-arg KVM_GID="$KVM_GID" \
+                  "$BASE_DIR"
