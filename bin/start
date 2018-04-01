@@ -32,6 +32,4 @@ sudo docker run -ti \
                 --volume="$XSOCK:$XSOCK" \
                 --volume="$XAUTH:$XAUTH" \
                 --env=XAUTHORITY="$XAUTH" \
-                --entrypoint /bin/bash \
-                -u droid \
                 android-studio
