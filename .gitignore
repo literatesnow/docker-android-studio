@@ -1,3 +1,4 @@
+.env
 cache/android/*
 !cache/android/.gitkeep
 cache/java/*

@@ -79,6 +79,7 @@ RUN echo "Download studio" \
   && sha256sum "/tmp/cache/$STUDIO_FILE" | grep "$STUDIO_HASH" \
   && unzip -qd "/home/droid/" "/tmp/cache/$STUDIO_FILE" \
   && echo "Saved state directories" \
+  # .AndroidStudio location can be set in idea.properties but the emulator looks in the home directory anyway
   && ln -s /var/studio/.AndroidStudio3.1 /home/droid/.AndroidStudio3.1 \
   && ln -s /var/studio/.java /home/droid/.java \
   && echo "Permissions" \
