@@ -3,7 +3,12 @@
 USER_UID=$(id -u)
 BASE_DIR=$(dirname "$0")/..
 
-[ -e ".env" ] && . "$BASE_DIR/.env"
+if [ "$USER_UID" == "0" ]; then
+  echo "Not to be run as root"
+  exit 1
+fi
+
+[ -e "$BASE_DIR/.env" ] && . "$BASE_DIR/.env"
 
 if [ -z "$DATA_DIR" ]; then
   echo "Env DATA_DIR not set (this is where the android projects are stored)"
@@ -24,7 +29,7 @@ XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker-android-studio.xauth
 xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f "$XAUTH" nmerge -
 
-sudo docker run -ti \
+sudo docker run -d \
                 --rm \
                 --device=/dev/kvm \
                 --device=/dev/dri \

@@ -5,6 +5,11 @@ USER_GID=$(id -g)
 KVM_GID=$(getent group kvm | cut -d':' -f3)
 BASE_DIR=$(dirname "$0")/../
 
+if [ "$USER_UID" == "0" ]; then
+  echo "Not to be run as root"
+  exit 1
+fi
+
 sudo docker build -t android-studio \
                   --build-arg DISPLAY="$DISPLAY" \
                   --build-arg USER_UID="$USER_UID" \
