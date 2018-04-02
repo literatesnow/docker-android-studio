@@ -1,6 +1,6 @@
 # docker-android-studio
 
-[Android Studio](https://developer.android.com/studio/) in a non-privileged docker container. It runs as a normal X11 window on a linux desktop.
+[Android Studio](https://developer.android.com/studio/) in a non-privileged docker container running as a X11 window.
 
 ## Things That Work
 
@@ -21,7 +21,7 @@
 The current user id, current group id and KVM group id is baked into the container. Running the container as more than one user isn't supported. Note that on some systems the KVM [group id is dynamic](https://wiki.archlinux.org/index.php/QEMU#Could_not_access_KVM_kernel_module:_Permission_denied) and changes on boot which means the container will have to be rebuilt.
 
 ```bash
-  $ bin/build
+  docker-android-studio$ bin/build
 ```
 
 ### Running
@@ -34,7 +34,7 @@ DATA_DIR|Directory containing android projects|/data|$HOME/AndroidStudioProjects
 STUDIO_DIR|Directory to store persistent data such as Android SDK and Android Emulator files|/var/studio|$HOME/.android-dev
 
 ```bash
-  $ bin/start
+  docker-android-studio$ bin/start
 ```
 
 #### First Run
@@ -48,8 +48,14 @@ A wizard appears the first time the studio is run.
 1. Verify Settings: (next)
 1. Emulator Settings: (finish)
 
+### Config
+
+The following files can be placed in the ``config/`` directory to be included in the image:
+
+* ``idea.properties``
+* ``studio64.vmoptions``
+
 ## ToDo
 
 * ``dbus`` errors when running Android Emulator.
 * The package ``xserver-xorg-input-void`` pulls in a dependency which might change keyboard layout on the host system.
-* Not having to rely on ``sudo docker``.
