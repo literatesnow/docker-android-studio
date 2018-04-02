@@ -60,7 +60,7 @@ RUN echo "Install packages" \
    unzip curl ca-certificates curl apt-utils
 
 COPY ./cache/android/ /tmp/cache/
-COPY ./pulse-client.conf /tmp/
+COPY ./config/ /tmp/config/
 
 RUN echo "Download studio" \
   && if [ ! -f "/tmp/cache/$STUDIO_FILE" ]; then \
@@ -71,13 +71,24 @@ RUN echo "Download studio" \
   && echo "KVM" \
   && groupmod --gid "$KVM_GID" kvm \
   && echo "PulseAudio" \
-  && cat /tmp/pulse-client.conf | sed -e "s/\${USER_ID}/$USER_UID/g" > /etc/pulse/client.conf \
+  && cat /tmp/config/pulse-client.conf | sed -e "s/\${USER_ID}/$USER_UID/g" > /etc/pulse/client.conf \
   && echo "Create user" \
   && groupadd --gid "$USER_GID" droid \
   && useradd -m --home /home/droid --uid "$USER_UID" --gid droid -G kvm --shell /bin/bash droid \
   && echo "Android Studio" \
   && sha256sum "/tmp/cache/$STUDIO_FILE" | grep "$STUDIO_HASH" \
   && unzip -qd "/home/droid/" "/tmp/cache/$STUDIO_FILE" \
+  && echo "Android Studio Config" \
+  && if [ -f "/tmp/config/idea.properties" ]; then \
+    cp /tmp/config/idea.properties /home/droid/.idea.properties \
+  ; else \
+    cp /home/droid/android-studio/bin/idea.properties /home/droid/.idea.properties \
+  ; fi \
+  && if [ -f "/tmp/config/studio64.vmoptions" ]; then \
+    cp /tmp/config/studio64.vmoptions /home/droid/.studio64.vmoptions \
+  ; else \
+    cp /home/droid/android-studio/bin/studio64.vmoptions /home/droid/.studio64.vmoptions \
+  ; fi \
   && echo "Saved state directories" \
   # .AndroidStudio location can be set in idea.properties but the emulator looks in the home directory anyway
   && ln -s /var/studio/.AndroidStudio3.1 /home/droid/.AndroidStudio3.1 \
@@ -104,7 +115,9 @@ ENV DISPLAY=$DISPLAY \
     ANDROID_SDK_HOME=/var/studio \
     ANDROID_EMULATOR_HOME=/var/studio/.android \
     ANDROID_AVD_HOME=/var/studio/.android/avd \
-    ANDROID_EMULATOR_USE_SYSTEM_LIBS=1
+    ANDROID_EMULATOR_USE_SYSTEM_LIBS=1 \
+    STUDIO_PROPERTIES=/home/droid/.idea.properties \
+    STUDIO_VM_OPTIONS=/home/droid/.studio64.vmoptions
 
 ENV PATH=$PATH:/home/droid/android-studio/bin:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools
 

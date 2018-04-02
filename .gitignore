@@ -3,3 +3,6 @@ cache/android/*
 !cache/android/.gitkeep
 cache/java/*
 !cache/java/.gitkeep
+config/*
+!config/.gitkeep
+!config/pulse-client.conf
